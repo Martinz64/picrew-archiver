@@ -2,6 +2,8 @@
 
 I made this simple python script to download all of the assets of a picrew (for archival reasons)
 
+This will only download the png's, you will have to combine them on a photo editor like GIMP or Photoshop
+
 
 How to use:
 
