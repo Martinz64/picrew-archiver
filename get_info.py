@@ -30,7 +30,7 @@ def download(url: str, dest_folder: str):
     else:  # HTTP status code 4XX/5XX
         print("Download failed: status code {}\n{}".format(r.status_code, r.text))
 
-id = argv[1]
+id = os.sys.argv[1]
 
 main_page = requests.get("https://picrew.me/image_maker/"+id).text
 
@@ -45,32 +45,33 @@ img_data = requests.get("https://picrew.me/app/image_maker/" + id + "/" + key + 
 img = json.loads(img_data)
 
 #print(cf)
-mkdir(id)
 
 base_url = cf['baseUrl']
 part_list = cf['pList']
 
-for p in part_list:
-    print(p['pId'],p['pNm'],base_url + p['thumbUrl'])
-    path =id+"/"+str(p['pId'])+'-'+p['pNm']
-    #mkdir(path)
-    #download(base_url + p['thumbUrl'],dest_folder=path)
-    print("DL: ["+base_url + p['thumbUrl']+"] -> [" + path + "]")
+try:
+    for p in part_list:
+        print(p['pId'],p['pNm'],base_url + p['thumbUrl'])
+        path =id+"/"+str(p['pId'])+'-'+p['pNm']
+        #mkdir(path)
+        #download(base_url + p['thumbUrl'],dest_folder=path)
+        print("DL: ["+base_url + p['thumbUrl']+"] -> [" + path + "]")
 
-    for item in p['items']:
-        item_path = path + "/" + str(item['itmId'])
-        #download(base_url + item['thumbUrl'],dest_folder=item_path)
-        print("DL: ["+base_url + item['thumbUrl']+"] -> [" + item_path + "]")
-        print("-",item['itmId'], base_url + item['thumbUrl'])
+        for item in p['items']:
+            item_path = path + "/" + str(item['itmId'])
+            #download(base_url + item['thumbUrl'],dest_folder=item_path)
+            print("DL: ["+base_url + item['thumbUrl']+"] -> [" + item_path + "]")
+            print("-",item['itmId'], base_url + item['thumbUrl'])
 
-        try:
-            item_dict = img['lst'][str(item['itmId'])]
-            for k1 in item_dict.keys():
-                for k2 in item_dict[k1].keys():
-                    url = base_url + item_dict[k1][k2]['url']
-                    #download(url,dest_folder=item_path)
-                    print("DL: ["+url+"] -> [" + item_path + "]")
-        except:
-            print("parse error:",str(item['itmId']))
-            
-
+            try:
+                item_dict = img['lst'][str(item['itmId'])]
+                for k1 in item_dict.keys():
+                    for k2 in item_dict[k1].keys():
+                        url = base_url + item_dict[k1][k2]['url']
+                        #download(url,dest_folder=item_path)
+                        print("DL: ["+url+"] -> [" + item_path + "]")
+            except:
+                print("parse error:",str(item['itmId']))
+                
+except:
+    ""
