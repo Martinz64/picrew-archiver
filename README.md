@@ -11,9 +11,9 @@ How to use:
 
 ```https://picrew.me/image_maker/[[ID]]```
 
-2. Run `get_info.py` and pipe its output to a text file:
+2. Run `get_info.py` and will automatically output to `urls.txt`:
 
-```python3 get_info.py [[ID]] > urls.txt```
+```python3 get_info.py [[ID]]```
 
 3. Run `download.py` to download all assets (This will take a long time):
 
@@ -22,5 +22,3 @@ How to use:
 4. (Optional) Generate a nice html page from the assets:
 
 ```python3 generate_html.py [directory created on the previous stage]```
-
-
