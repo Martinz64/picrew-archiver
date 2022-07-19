@@ -32,7 +32,8 @@ def download(url: str, dest_folder: str):
         print("Download failed: status code {}\n{}".format(r.status_code, r.text))
 
 
-with open(argv[1], "r", encoding="utf-8") as f: # To avoid encoding error, this happens when OS is not using utf-8
+# To avoid encoding error, this happens when OS is not using utf-8
+with open(argv[1], "r", encoding="utf-8") as f:
     data = f.readlines()
     for line in data:
         matches = pattern.findall(line)
