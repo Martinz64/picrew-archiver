@@ -98,3 +98,5 @@ try:
 except:
     import traceback
     traceback.print_exc()
+
+output.close()
