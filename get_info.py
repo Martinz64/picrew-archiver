@@ -33,30 +33,46 @@ def download(url: str, dest_folder: str):
     else:  # HTTP status code 4XX/5XX
         print("Download failed: status code {}\n{}".format(r.status_code, r.text))
 
+def get_release_key(pagedata):
+    key_pattern = re.compile("release_key:\"([A-Za-z0-9]+)\"")
+    key = key_pattern.findall(pagedata)[0]
+    return key
 
+def get_thumbnail_url(pagedata):
+    thumbnail_pattern = re.compile("icon_url:\"(.*.[png]|[jpg])\"")
+    main_thumbnail_url = thumbnail_pattern.findall(pagedata)[0].replace("\\u002F","/")
+    return main_thumbnail_url
+
+def is_public_picrew(id):
+    return not any(c.isalpha() for c in str(id))
 # To avoid encoding error, this happens when OS is not using utf-8
 output = open("urls.txt", "w", encoding="utf-8")
 
 id = os.sys.argv[1]
+virtual_id = id
+key = "" 
+main_thumbnail_url = ""
+if is_public_picrew(id):
+    main_page = requests.get("https://picrew.me/image_maker/"+id).text
+    key = get_release_key(main_page)
+    main_thumbnail_url = get_thumbnail_url(main_page)
+else:
+    main_page = requests.get("https://picrew.me/secret_image_maker/"+id).text
+    key = get_release_key(main_page)
+    main_thumbnail_url = get_thumbnail_url(main_page)
+    vid_pattern = re.compile("/app/image_maker/(.*)/icon.*.(png|jpg)")
+    virtual_id = vid_pattern.findall(main_thumbnail_url)[0][0]
+    print(virtual_id)
 
-main_page = requests.get("https://picrew.me/image_maker/"+id).text
-
-key_pattern = re.compile("release_key:\"([A-Za-z0-9]+)\"")
-key = key_pattern.findall(main_page)[0]
-
-thumbnail_pattern = re.compile("icon_url:\"(.*.[png]|[jpg])\"")
-main_thumbnail_url = thumbnail_pattern.findall(main_page)[0].replace("\\u002F","/")
-print(main_thumbnail_url)
-
-print("https://picrew.me/app/image_maker/" + id + "/" + key + "/cf.json")
+print("https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/cf.json")
 output.write("https://picrew.me/app/image_maker/" +
-             id + "/" + key + "/cf.json\n")
+             virtual_id + "/" + key + "/cf.json\n")
 cf_data = requests.get(
-    "https://picrew.me/app/image_maker/" + id + "/" + key + "/cf.json").text
+    "https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/cf.json").text
 cf = json.loads(cf_data)
 
 img_data = requests.get(
-    "https://picrew.me/app/image_maker/" + id + "/" + key + "/img.json").text
+    "https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/img.json").text
 img = json.loads(img_data)
 
 # print(cf)
@@ -66,8 +82,8 @@ base_url = "https://picrew.me"
 part_list = cf['pList']
 
 print("DL: ["+base_url + main_thumbnail_url + "] -> [" + id + "]")
-print("DL: [https://picrew.me/app/image_maker/" + id + "/" + key + "/cf.json] -> [" + id + "]")
-print("DL: [https://picrew.me/app/image_maker/" + id + "/" + key + "/img.json] -> [" + id + "]")
+print("DL: [https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/cf.json] -> [" + id + "]")
+print("DL: [https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/img.json] -> [" + id + "]")
 
 
 try:
