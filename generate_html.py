@@ -1,8 +1,10 @@
 import os
 
-dir = argv[1]
+dir = os.sys.argv[1]
 
 dirs = os.listdir(dir)
+
+dirs = sorted(dirs)
 
 categories = []
 for d in dirs:
@@ -13,7 +15,7 @@ catgs = []
 
 for cat in categories:
     fItems = os.listdir(dir + '/' + cat)
-
+    fItems = sorted(fItems)
     items = []
 
     category_thumbnail = ""
@@ -28,7 +30,7 @@ for cat in categories:
 
             item_thumbnail = ""
             variants = []
-            for img in os.listdir(cdir):
+            for img in sorted(os.listdir(cdir)):
                 if img.endswith("png"):
                     if img.startswith('ii_'):
                         item_thumbnail = cdir2 + '/' + img
