@@ -34,7 +34,8 @@ def download(url: str, dest_folder: str):
         print("Download failed: status code {}\n{}".format(r.status_code, r.text))
 
 
-output = open("urls.txt", "w", encoding="utf-8") # To avoid encoding error, this happens when OS is not using utf-8
+# To avoid encoding error, this happens when OS is not using utf-8
+output = open("urls.txt", "w", encoding="utf-8")
 
 id = os.sys.argv[1]
 
@@ -108,3 +109,5 @@ try:
 except:
     import traceback
     traceback.print_exc()
+
+output.close()
