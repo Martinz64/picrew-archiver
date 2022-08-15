@@ -2,15 +2,17 @@ import os
 import re
 from sys import argv
 
-import requests 
+import requests
 
 pattern = re.compile("DL: \[(.*)\] -> \[(.*)\]")
+
 
 def download(url: str, dest_folder: str):
     if not os.path.exists(dest_folder):
         os.makedirs(dest_folder)  # create folder if it does not exist
 
-    filename = url.split('/')[-1].replace(" ", "_")  # be careful with file names
+    # be careful with file names
+    filename = url.split('/')[-1].replace(" ", "_")
     file_path = os.path.join(dest_folder, filename)
 
     if os.path.exists(file_path):
@@ -30,7 +32,7 @@ def download(url: str, dest_folder: str):
         print("Download failed: status code {}\n{}".format(r.status_code, r.text))
 
 
-with open(argv[1],"r") as f:
+with open(argv[1], "r", encoding="utf-8") as f: # To avoid encoding error, this happens when OS is not using utf-8
     data = f.readlines()
     for line in data:
         matches = pattern.findall(line)
