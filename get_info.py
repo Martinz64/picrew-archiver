@@ -39,7 +39,7 @@ def get_release_key(pagedata):
     return key
 
 def get_thumbnail_url(pagedata):
-    thumbnail_pattern = re.compile("icon_url:\"(.*.[png]|[jpg])\"")
+    thumbnail_pattern = re.compile("icon_url:\"(.*\.(?:png|jpg))\"")
     main_thumbnail_url = thumbnail_pattern.findall(pagedata)[0].replace("\\u002F","/")
     return main_thumbnail_url
 
@@ -87,8 +87,10 @@ print("DL: [https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/img
 
 
 try:
+    part_ctr = 0
     for p in part_list:
-        path = id+"/"+str(p['pId'])+'-'+p['pNm']
+        part_ctr = part_ctr + 1
+        path = id+"/"+ str(part_ctr).zfill(4) + '-' + str(p['pId'])+'-'+p['pNm']
         if p['thumbUrl']:  # Pass if thumbnail is null
             print(p['pId'], p['pNm'], base_url + p['thumbUrl'])
             output.write(str(p['pId'])+' '+str(p['pNm'])+' ' +
@@ -99,9 +101,12 @@ try:
             output.write(
                 "DL: ["+base_url + str(p['thumbUrl'])+"] -> [" + path + "]\n")
 
+        item_ctr = 0
         for item in p['items']:
+            item_ctr = item_ctr + 1
+            item_path = path + "/" + str(item_ctr).zfill(4) + '-' + str(item['itmId'])
             if item['thumbUrl']:  # Pass if thumbnail is null
-                item_path = path + "/" + str(item['itmId'])
+                item_path = path + "/" + str(item_ctr).zfill(4) + '-' + str(item['itmId'])
                 #download(base_url + item['thumbUrl'],dest_folder=item_path)
                 print("DL: ["+base_url + item['thumbUrl'] +
                       "] -> [" + item_path + "]")
