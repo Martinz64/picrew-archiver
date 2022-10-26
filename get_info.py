@@ -2,6 +2,7 @@ import requests
 import re
 import json
 import os
+import js2py
 
 
 def mkdir(dir):
@@ -64,16 +65,17 @@ else:
     virtual_id = vid_pattern.findall(main_thumbnail_url)[0][0]
     print(virtual_id)
 
-print("https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/cf.json")
-output.write("https://picrew.me/app/image_maker/" +
-             virtual_id + "/" + key + "/cf.json\n")
-cf_data = requests.get(
-    "https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/cf.json").text
-cf = json.loads(cf_data)
 
-img_data = requests.get(
-    "https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/img.json").text
-img = json.loads(img_data)
+
+#======NO TOCAR======
+#no me preguntes qu hace esto, no lo se ni yo 💀
+main_page = requests.get("https://picrew.me/image_maker/1272810").text
+nuxt_pattern = re.compile("<script>.+(__NUXT__.*\);)<\/script>")
+nuxt_data = nuxt_pattern.findall(main_page)[0]
+parsed_nuxt_data = js2py.eval_js("function getData(){ "  + nuxt_data + "\n return __NUXT__}\n")
+
+img = {"baseUrl":"https:\/\/cdn.picrew.me","lst":parsed_nuxt_data().to_dict()['state']['commonImages']}
+cf = parsed_nuxt_data().to_dict()['state']['config']
 
 # print(cf)
 

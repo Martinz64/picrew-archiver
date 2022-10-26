@@ -8,16 +8,19 @@ This will only download the png's, you will have to combine them on a photo edit
 How to use:
 
 1. Get the picrew id:
-
+   
 ```https://picrew.me/image_maker/[[ID]]```
 
-2. Run `get_info.py` and will automatically output to `urls.txt`:
+2. Run `get_info.py` and pipe its output to `download-fast.sh`:
 
-```python3 get_info.py [[ID]]```
+```python3 get_info.py [[ID]] | ./download-fast.sh```
 
-3. Run `download.py` to download all assets (This will take a long time):
+1. Go into the newly created folder (name is the id) and run `generate_cf_img_json.py` to generate `cf.json` and `img.json` (required for using the picrew player):
 
-```python3 download.py urls.txt```
+```
+cd [[ID]]
+python3 ../generate_cf_img_json.py [[ID]]
+```
 
 4. (Optional) Generate a nice html page from the assets:
 

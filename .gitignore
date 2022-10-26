@@ -1,7 +1,9 @@
-<<<<<<< HEAD
 downloads
 work
-=======
+work2
+experiments_v2
+work-parallel
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -165,4 +167,3 @@ cython_debug/
 
 # Output file list
 urls.txt
->>>>>>> 0e09b4fc06e959d837114f5cdbd75e0015475a2f
