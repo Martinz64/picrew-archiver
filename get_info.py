@@ -39,15 +39,15 @@ def get_release_key(pagedata):
     key = key_pattern.findall(pagedata)[0]
     return key
 
-def get_thumbnail_url(pagedata):
+'''def get_thumbnail_url(pagedata):
     thumbnail_pattern = re.compile("icon_url:\"(.*\.(?:png|jpg))\"")
     main_thumbnail_url = thumbnail_pattern.findall(pagedata)[0].replace("\\u002F","/")
-    return main_thumbnail_url
+    return main_thumbnail_url'''
 
 def is_public_picrew(id):
     return not any(c.isalpha() for c in str(id))
 # To avoid encoding error, this happens when OS is not using utf-8
-output = open("urls.txt", "w", encoding="utf-8")
+#output = open("urls.txt", "w", encoding="utf-8")
 
 id = os.sys.argv[1]
 virtual_id = id
@@ -56,11 +56,11 @@ main_thumbnail_url = ""
 if is_public_picrew(id):
     main_page = requests.get("https://picrew.me/image_maker/"+id).text
     key = get_release_key(main_page)
-    main_thumbnail_url = get_thumbnail_url(main_page)
+    #main_thumbnail_url = get_thumbnail_url(main_page)
 else:
     main_page = requests.get("https://picrew.me/secret_image_maker/"+id).text
     key = get_release_key(main_page)
-    main_thumbnail_url = get_thumbnail_url(main_page)
+    #main_thumbnail_url = get_thumbnail_url(main_page)
     vid_pattern = re.compile("/app/image_maker/(.*)/icon.*.(png|jpg)")
     virtual_id = vid_pattern.findall(main_thumbnail_url)[0][0]
     print(virtual_id)
@@ -77,15 +77,18 @@ parsed_nuxt_data = js2py.eval_js("function getData(){ "  + nuxt_data + "\n retur
 img = {"baseUrl":"https:\/\/cdn.picrew.me","lst":parsed_nuxt_data().to_dict()['state']['commonImages']}
 cf = parsed_nuxt_data().to_dict()['state']['config']
 
+
 # print(cf)
 
 
 base_url = "https://picrew.me"
 part_list = cf['pList']
 
-print("DL: ["+base_url + main_thumbnail_url + "] -> [" + id + "]")
-print("DL: [https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/cf.json] -> [" + id + "]")
-print("DL: [https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/img.json] -> [" + id + "]")
+thumbnail_url = parsed_nuxt_data().to_dict()['state']['imageMakerInfo']['icon_url']
+
+print("DL: ["+ thumbnail_url + "] -> [" + id + "]")
+#print("DL: [https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/cf.json] -> [" + id + "]")
+#print("DL: [https://picrew.me/app/image_maker/" + virtual_id + "/" + key + "/img.json] -> [" + id + "]")
 
 
 try:
@@ -95,13 +98,13 @@ try:
         path = id+"/"+ str(part_ctr).zfill(4) + '-' + str(p['pId'])+'-'+p['pNm']
         if p['thumbUrl']:  # Pass if thumbnail is null
             print(p['pId'], p['pNm'], base_url + p['thumbUrl'])
-            output.write(str(p['pId'])+' '+str(p['pNm'])+' ' +
-                         base_url + str(p['thumbUrl']) + '\n')
+            #output.write(str(p['pId'])+' '+str(p['pNm'])+' ' +
+            #             base_url + str(p['thumbUrl']) + '\n')
             # mkdir(path)
             #download(base_url + p['thumbUrl'],dest_folder=path)
             print("DL: ["+base_url + p['thumbUrl']+"] -> [" + path + "]")
-            output.write(
-                "DL: ["+base_url + str(p['thumbUrl'])+"] -> [" + path + "]\n")
+            #output.write(
+            #    "DL: ["+base_url + str(p['thumbUrl'])+"] -> [" + path + "]\n")
 
         item_ctr = 0
         for item in p['items']:
@@ -112,11 +115,11 @@ try:
                 #download(base_url + item['thumbUrl'],dest_folder=item_path)
                 print("DL: ["+base_url + item['thumbUrl'] +
                       "] -> [" + item_path + "]")
-                output.write(
-                    "DL: ["+base_url + str(item['thumbUrl'])+"] -> [" + item_path + "]\n")
+                #output.write(
+                #    "DL: ["+base_url + str(item['thumbUrl'])+"] -> [" + item_path + "]\n")
                 print("-", item['itmId'], base_url + item['thumbUrl'])
-                output.write("-"+' '+str(item['itmId'])+' ' +
-                             base_url + str(item['thumbUrl']) + '\n')
+                #output.write("-"+' '+str(item['itmId'])+' ' +
+                #             base_url + str(item['thumbUrl']) + '\n')
 
             try:
                 item_dict = img['lst'][str(item['itmId'])]
@@ -125,7 +128,7 @@ try:
                         url = base_url + item_dict[k1][k2]['url']
                         # download(url,dest_folder=item_path)
                         print("DL: ["+url+"] -> [" + item_path + "]")
-                        output.write("DL: ["+url+"] -> [" + item_path + "]\n")
+                        #output.write("DL: ["+url+"] -> [" + item_path + "]\n")
             except:
                 print("parse error:", str(item['itmId']))
 
@@ -133,4 +136,4 @@ except:
     import traceback
     traceback.print_exc()
 
-output.close()
+#output.close()
