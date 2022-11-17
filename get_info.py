@@ -69,7 +69,7 @@ else:
 
 #======NO TOCAR======
 #no me preguntes qu hace esto, no lo se ni yo 💀
-main_page = requests.get("https://picrew.me/image_maker/1272810").text
+#main_page = requests.get("https://picrew.me/image_maker/1272810").text
 nuxt_pattern = re.compile("<script>.+(__NUXT__.*\);)<\/script>")
 nuxt_data = nuxt_pattern.findall(main_page)[0]
 parsed_nuxt_data = js2py.eval_js("function getData(){ "  + nuxt_data + "\n return __NUXT__}\n")
